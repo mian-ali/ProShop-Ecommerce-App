@@ -1,0 +1,9 @@
+main {
+  min-height: 35rem;
+}
+h3 {
+  padding: 1rem;
+}
+.rating span {
+  margin: 0.1rem;
+}
