@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios"
-import { Row, Col } from "react-bootstrap"
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col } from "react-bootstrap";
 // import Products from "../products"
-import Product from "../Components/Product"
+import Product from "../Components/Product";
+import { listProducts } from "../actions/productActions";
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
 
 
-    const [products, setProducts] = useState([])
-    useEffect(() => {
 
-        const fetchProducts = async () => {
-            const { data } = await axios.get('/api/products')
-            setProducts(data)
-        }
-        fetchProducts()
-    }, [])
+  useEffect(() => {
+    dispatch(listProducts());
+  }, [dispatch]);
 
-    return (
-        <>
-            <h1>Lastest  products</h1>
-            <Row>
+  const products=[]
+
+  return (
+    <>
+      <h1>Lastest products</h1>
+
+      <Row>
                 {products.map(product => (
                     <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
 
@@ -30,7 +30,7 @@ const HomeScreen = () => {
 
             </Row>
         </>
-    )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
