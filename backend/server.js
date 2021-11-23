@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 import colors from 'colors' //import colors from npm
 import connectDB from './config/db.js'; //db file import
 import productsRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
+
 import {notFound , errorHandler} from './middlewear/errorMiddlewear.js'
 dotenv.config();
 connectDB()
 const app = express()
+app.use(express.json())
 
 // app.use((req , res , next)=>{
 //   console.log(req.originalUrl);
@@ -22,6 +25,8 @@ app.get('/', (req, res) => {
 //single product rendering in server route 
 // this route Move In productsRoutes
 app.use("/api/products", productsRoutes)
+app.use("/api/users" , userRoutes)
+
 
 // any wornge route enter  error 
 app.use(notFound)
