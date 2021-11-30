@@ -55,11 +55,14 @@ function LoginScreen({ location , history}) {
                 </Form.Group>    
                 <Button type="submit"  variant="primary" className="mt-3" >Sign In</Button>
             </Form>            
-            <Row className="py-3">
-                <Col>
-                New Customer? <Link to={redirect ? `/register$redirect=${redirect}` :"/register"}  >Register</Link>
-                </Col>
-            </Row>
+        <Row className='py-3'>
+        <Col>
+          New Customer?{' '}
+          <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>
+            Register
+          </Link>
+        </Col>
+      </Row>
         </FormContainer>
     )
 }
