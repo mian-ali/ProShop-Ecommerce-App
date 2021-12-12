@@ -4,8 +4,10 @@ import colors from 'colors' //import colors from npm
 import connectDB from './config/db.js'; //db file import
 import productsRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-
 import {notFound , errorHandler} from './middlewear/errorMiddlewear.js'
+import orderRoutes from './routes/OrderRoutes.js'
+
+
 dotenv.config();
 connectDB()
 const app = express()
@@ -26,6 +28,8 @@ app.get('/', (req, res) => {
 // this route Move In productsRoutes
 app.use("/api/products", productsRoutes)
 app.use("/api/users" , userRoutes)
+app.use("/api/orders" , orderRoutes)
+
 
 
 // any wornge route enter  error 
