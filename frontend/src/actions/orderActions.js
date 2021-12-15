@@ -53,13 +53,12 @@ export const createOrder = (order) => async (dispatch, getState) => {
         },
       }
   
-      const { data } = await axios.get(`/api/orders${id}`, config)
+      const { data } = await axios.get(`/api/orders/${id}`, config)
   
       dispatch({
         type: ORDER_DETAILS_SUCCESS,
         payload: data,
       })
- 
     } catch (error) {       
    
       dispatch({
