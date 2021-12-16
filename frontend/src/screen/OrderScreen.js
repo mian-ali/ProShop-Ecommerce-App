@@ -31,7 +31,7 @@ function OrderScreen({match}) {
   
     dispatch(getOrderDetails(orderId))
 
-  }, [])
+  }, [dispatch , orderId])
 
     return loading ? <Loader /> :error ? <Message variant='danger'>
     
