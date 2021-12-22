@@ -117,4 +117,20 @@ const updateUserProfile = asyncHandle(async(req,res)=>{
         throw new Error("User Not Found")
     }
 })
-export  {authUsers , registerUser ,getUserProfile, updateUserProfile}
+
+
+//@dec       GET All Users
+//@route     GET /api/users
+//@access    Private/admin 
+
+const getUser = asyncHandle(async(req,res)=>{
+ 
+    const users = await User.find({})
+    res.json(users)
+
+ 
+})
+
+
+
+export  {authUsers , registerUser ,getUserProfile, updateUserProfile , getUser}
