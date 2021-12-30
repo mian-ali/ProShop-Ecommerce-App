@@ -4,8 +4,8 @@ import { Table, Button, Row , Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../Components/Message'
 import Loader from '../Components/Loader'
-import {listProducts , deleteProduct} from '../actions/productActions'
-
+import {listProducts , deleteProduct , createProduct} from '../actions/productActions'
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 function ProductListScreen({history , match}) {
 
     const dispatch = useDispatch()
@@ -16,6 +16,8 @@ function ProductListScreen({history , match}) {
     const productDelete = useSelector((state) => state.productDelete)
     const { loading:loadingDelete, error:errorDelete, success:successDelete} = productDelete
 
+    const productCreate = useSelector((state) => state.productCreate)
+    const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct,}= productCreate
 
     const userLogin = useSelector((state) => state.userLogin)
     const { userInfo} = userLogin
@@ -24,14 +26,16 @@ function ProductListScreen({history , match}) {
 
 
     useEffect(() => {
-
-      if (userInfo && userInfo.isAdmin){
-
-        dispatch(listProducts())
-      }else{
+       dispatch({type:PRODUCT_CREATE_RESET})
+      if (!userInfo.isAdmin){
         history.push('/login')
-      }
-      }, [dispatch , history ,  userInfo , successDelete])
+       }
+       if (successCreate) {
+          history.push(`/admin/product/${createdProduct._id}/edit`)
+       }else{
+         dispatch(listProducts())
+       }
+      }, [dispatch , history ,  userInfo , successDelete , successCreate , createdProduct])
 
       const deleteHandler=(id)=>{
         
@@ -41,9 +45,9 @@ function ProductListScreen({history , match}) {
         }
       }
 
-      const createProductHandler=(product)=>{
-          //create Product next Couple of Slides
-       }
+      const createProductHandler=()=>{
+        dispatch(createProduct())
+      }
 
     return (
     
@@ -60,6 +64,9 @@ function ProductListScreen({history , match}) {
          </Row>
          {loadingDelete && <Loader />}
          {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
+
+         {loadingCreate && <Loader />}
+         {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
