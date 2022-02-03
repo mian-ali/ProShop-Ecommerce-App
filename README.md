@@ -2,6 +2,9 @@
 
 > eCommerce platform built with the MERN stack & Redux.
 
+# Live Preview Project
+[View Project Demo](https://aliahmadshop.herokuapp.com/)
+
 ## Features
 
 - Full featured shopping cart
