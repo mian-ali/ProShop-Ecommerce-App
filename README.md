@@ -93,4 +93,4 @@ ali@example.com (Customer)
 123456
 
 ```
-[Login proShop  ](aliahmadshop.herokuapp.com/)
+[Login/Register proshop  ](https://aliahmadshop.herokuapp.com/register?redirect=/)
