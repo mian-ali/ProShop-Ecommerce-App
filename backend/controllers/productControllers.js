@@ -83,7 +83,7 @@ const createProduct = asyncHandle(async(req,res)=>{
 
 const updateProduct = asyncHandle(async(req,res)=>{
    
-    const {name , price  , description, image , brand , category , countInStock} = req.body
+    const { name , price  , description, image , brand , category , countInStock} = req.body
 
     const product=await Product.findById(req.params.id)
 
