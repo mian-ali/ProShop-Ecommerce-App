@@ -2,8 +2,9 @@
 
 > eCommerce platform built with the MERN stack & Redux.
 
-# Live Preview Project
-[View Project Demo](https://aliahmadshop.herokuapp.com/)
+## Live Prview Project 
+- Production Link Change due to Heroku Free tire closed move Heroku to cyclic.sh
+[Demo Project](https://fancy-scarf.cyclic.app/)
 
 ## Features
 
