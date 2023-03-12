@@ -69,11 +69,9 @@ npm run server
 cd frontend
 npm run build
 ```
-
 There is a Heroku postbuild script, so if you push to Heroku, no need to build manually for deployment to Heroku
 
 ### Seed  Database
-
 You can use the following commands to seed the database with some sample users and products as well as destroy all data
 
 ```
@@ -94,4 +92,4 @@ ali@example.com (Customer)
 123456
 
 ```
-[Login/Register proshop  ](https://aliahmadshop.herokuapp.com/register?redirect=/)
+[Login/Register proshop ](https://aliahmadshop.herokuapp.com/register?redirect=/)
