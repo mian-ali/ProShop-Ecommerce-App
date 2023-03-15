@@ -1,0 +1,47 @@
+
+# name: Docker Image CI
+
+# on:
+#   push:
+#     branches: [ "main" ]
+
+# jobs:
+#   docker-job:
+#     name: Push to dockerhub
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Git checkout
+#       uses: actions/checkout@v3
+    
+#     - name: Configure AWS credentials from AWS account
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+#         aws-region: ${{ secrets.AWS_REGION }}
+
+#     - name: Login to Amazon ECR
+#       id: login-ecr
+#       uses: aws-actions/amazon-ecr-login@v1
+
+#     - name: Build, tag, and push backend image to Amazon ECR
+#       env:
+#         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#         ECR_REPOSITORY: proshop
+#         IMAGE_TAG: latest
+#         WORKING_DIRECTORY: backend
+#       run: |
+#         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$WORKING_DIRECTORY:$IMAGE_TAG .
+#         docker push $ECR_REGISTRY/$ECR_REPOSITORY/$WORKING_DIRECTORY:$IMAGE_TAG
+#       working-directory: $WORKING_DIRECTORY
+
+#     - name: Build, tag, and push frontend image to Amazon ECR
+#       env:
+#         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#         ECR_REPOSITORY: proshop
+#         IMAGE_TAG: latest
+#         WORKING_DIRECTORY: frontend
+#       run: |
+#         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$WORKING_DIRECTORY:$IMAGE_TAG .
+#         docker push $ECR_REGISTRY/$ECR_REPOSITORY/$WORKING_DIRECTORY:$IMAGE_TAG
+#       working-directory: $WORKING_DIRECTORY
+  

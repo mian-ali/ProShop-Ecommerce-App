@@ -1,0 +1,160 @@
+
+
+name: "Terraform action"
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+      id-token: write 
+      contents: read 
+      pull-requests: write
+
+jobs:
+
+  Checkout-and-Setup-Terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.5
+      
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+  Terraform-Plan:
+    needs: [Checkout-and-Setup-Terraform]
+    runs-on: ubuntu-latest
+    env:
+      working-directory: terraform
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: ${{ env.working-directory }}
+       
+      - name: Terraform Init
+        id: init
+        run: | 
+          terraform init
+        working-directory: ${{ env.working-directory }}
+       
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate 
+        working-directory: ${{ env.working-directory }}
+
+      - name: Terraform tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          github_token: ${{ github.token }}
+        
+      - name: Terraform Plan
+        id: plan
+        run: 
+          terraform plan 
+        working-directory: ${{ env.working-directory }}
+        continue-on-error: false
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+  Terraform-Apply:
+    needs: [ Terraform-Plan]
+    runs-on: ubuntu-latest
+    env:
+      working-directory: terraform
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: | 
+          terraform init
+          terraform apply -auto-approve -input=false
+        working-directory: ${{ env.working-directory }}
+
+  # Kubernetes-Deploy:
+  #   needs: [Terraform-Apply]
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     working-directory: deploy/kubernetes
+  #   steps:
+  #     - name: Git checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Configure AWS credentials from AWS account
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Update kube config
+  #       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: |
+  #         aws eks update-kubeconfig --name ${{vars.cluster_name}} --region ${{ secrets.AWS_REGION }}
+
+  #     - name: Deploy to eks
+  #       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: |
+  #         kubectl apply -f deploy/kubernetes/complete-demo.yaml
+  #         kubectl apply -f terraform/read-group.yaml
+  #         kubectl patch configmap/aws-auth -n kube-system --type=json -p='[{"op": "add", "path": "/data/mapUsers", "value": "- userarn: ${{vars.user_arn}}\n  username: emma_ninja\n  groups:\n  - reader\n"}]'
+
+
+
+  # Terraform-Destroy:
+  #   needs: [ Terraform-Plan]
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     working-directory: terraform
+  #   steps:
+  #     - name: Git checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Configure AWS credentials from AWS account
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Terraform Destroy
+  #       run: | 
+  #         terraform init
+  #         terraform destroy -auto-approve -input=false
+  #       working-directory: ${{ env.working-directory }}
+  
+  
