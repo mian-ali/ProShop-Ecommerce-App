@@ -91,4 +91,4 @@ admin@example.com (Admin)
 ali@example.com (Customer)
 123456
 ```
-[Login/Register](https://aliahmadshop.herokuapp.com/register?redirect=/)
+[Vist App](https://aliahmadshop.herokuapp.com/register?redirect=/)
